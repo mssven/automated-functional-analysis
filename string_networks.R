@@ -133,13 +133,13 @@ prepare_labels <- function(cat_sub, df_ora, communities){
 
 
 
-get_community_representatives <- function( cat_sub, universe, selection, databases_tested, threshold_mean, threshold_min, ora_min, ora_max ){
+get_community_representatives <- function( cat_sub, universe, selection, databases_tested, threshold_mean, threshold_min, ora_min, ora_max, folder_databases ){
   
   n_databases <- length(databases_tested)
   
   for(j in 1:n_databases){
     
-    
+    db <- get_database(databases_tested[[j]], folder_databases)
     
     
     n_communities <- length(cat_sub$communities$all_genes)

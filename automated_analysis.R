@@ -56,7 +56,7 @@ automated_functional_analysis <- function( my_geneset,
   selection <- "fdr"
 
   cat_sub <- identify_category_subclusters(communities, df_singleton, string_db, interaction_graph_filtered,  singleton_threshold)
-  df_ora <- get_community_representatives( cat_sub, universe, selection, databases_tested, threshold_mean, threshold_min, ora_min, ora_max )
+  df_ora <- get_community_representatives( cat_sub, universe, selection, databases_tested, threshold_mean, threshold_min, ora_min, ora_max, folder_databases )
   labels <- prepare_labels(cat_sub, df_ora, communities)
   
   write.csv(df_ora, file = paste0(folder_results, "/overrepresentation_analysis_", reference, ".csv"))
