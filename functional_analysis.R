@@ -6,34 +6,34 @@
 #library(fgsea)
 
 
-get_database <- function( database ){
+get_database <- function( database, folder ){
   
   if(database == 'gobp'){
-    pathways <- fgsea::gmtPathways("D:/Project_tPKP2/functional_analysis/msigdb_v2024.1.Mm_files_to_download_locally/msigdb_v2024.1.Mm_files_to_download_locally/msigdb_v2024.1.Mm_GMTs/m5.go.bp.v2024.1.Mm.symbols.gmt")
+    pathways <- fgsea::gmtPathways(paste0(folder, "/msigdb_v2024.1.Mm_GMTs/m5.go.bp.v2024.1.Mm.symbols.gmt"))
   }
   
   if(database == 'gocc'){
-    pathways <- fgsea::gmtPathways("D:/Project_tPKP2/functional_analysis/msigdb_v2024.1.Mm_files_to_download_locally/msigdb_v2024.1.Mm_files_to_download_locally/msigdb_v2024.1.Mm_GMTs/m5.go.cc.v2024.1.Mm.symbols.gmt")
+    pathways <- fgsea::gmtPathways(paste0(folder, "/msigdb_v2024.1.Mm_GMTs/m5.go.cc.v2024.1.Mm.symbols.gmt"))
   }
   
   if(database == 'gomf'){
-    pathways <- fgsea::gmtPathways("D:/Project_tPKP2/functional_analysis/msigdb_v2024.1.Mm_files_to_download_locally/msigdb_v2024.1.Mm_files_to_download_locally/msigdb_v2024.1.Mm_GMTs/m5.go.mf.v2024.1.Mm.symbols.gmt")
+    pathways <- fgsea::gmtPathways(paste0(folder, "/msigdb_v2024.1.Mm_GMTs/m5.go.mf.v2024.1.Mm.symbols.gmt"))
   }
   
   if(database == 'reactome'){
-    pathways <- fgsea::gmtPathways("D:/Project_tPKP2/functional_analysis/msigdb_v2024.1.Mm_files_to_download_locally/msigdb_v2024.1.Mm_files_to_download_locally/msigdb_v2024.1.Mm_GMTs/m2.cp.reactome.v2024.1.Mm.symbols.gmt")
+    pathways <- fgsea::gmtPathways(paste0(folder, "/msigdb_v2024.1.Mm_GMTs/m2.cp.reactome.v2024.1.Mm.symbols.gmt"))
   }
   
   if(database == 'reactome_human'){
-    pathways <- fgsea::gmtPathways("D:/Project_tPKP2/functional_analysis/c2.cp.reactome.v2024.1.Hs.symbols.gmt")
+    pathways <- fgsea::gmtPathways(paste0(folder, "/c2.cp.reactome.v2024.1.Hs.symbols.gmt"))
   }
   
   if(database == 'gobp_human'){
-    pathways <- fgsea::gmtPathways("D:/Project_tPKP2/functional_analysis/c5.go.bp.v2025.1.Hs.symbols.gmt")
+    pathways <- fgsea::gmtPathways(paste0(folder, "/c5.go.bp.v2025.1.Hs.symbols.gmt"))
   }
   
   if(database == 'gocc_human'){
-    pathways <- fgsea::gmtPathways("D:/Project_tPKP2/functional_analysis/c5.go.cc.v2025.1.Hs.symbols.gmt")
+    pathways <- fgsea::gmtPathways(paste0(folder, "/c5.go.cc.v2025.1.Hs.symbols.gmt"))
   }
   
   return(pathways)
