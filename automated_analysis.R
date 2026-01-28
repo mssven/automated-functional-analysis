@@ -1,9 +1,5 @@
 
-
-
 library(dplyr)
-
-
 
 automated_functional_analysis <- function( my_geneset, 
                                universe, 
@@ -14,7 +10,8 @@ automated_functional_analysis <- function( my_geneset,
                                species, 
                                ora_min, 
                                ora_max, 
-                               directory, 
+                               folder_databases,
+                               folder_results,
                                reference, 
                                string_score_threshold,
                                singleton_threshold,
@@ -22,12 +19,10 @@ automated_functional_analysis <- function( my_geneset,
                                network_width,
                                protein_highlight = c()  ){
   
-  source("D:/Function_for_functional_analysis/R/functional_analysis_functions.R")
-  source("D:/Function_for_functional_analysis/R/functions_term_reduction.R")
-  source("D:/Function_for_functional_analysis/R/string_networks.R")
+
  
   
-  string_database_location <- "D:/Function_for_functional_analysis/String"
+  string_database_location <- paste0(folder_databases, "/String")
   
 
   out_ii <- identify_interactions( my_geneset, string_database_location, species)  
@@ -43,8 +38,6 @@ automated_functional_analysis <- function( my_geneset,
   communities <- out_cn$communities
   interaction_graph_filtered <- out_cn$graph
   
-  #mapped_proteins <- string_db$map(data.frame(protein = my_geneset), "protein", removeUnmappedRows = TRUE)
-  
   # Find singletons 
   all_stringID <- c(interactions$from, interactions$to) 
   all_stringID_unique <- unique(all_stringID)
@@ -56,21 +49,19 @@ automated_functional_analysis <- function( my_geneset,
   out_asm <- assign_subnetwork_membership(my_geneset, interactions, communities, string_db, mapped_proteins)
   df_out <- out_asm$df_out
   
- 
   df_singleton <- place_singletons( df_out, mapped_proteins, interactions )
 
   layout_fr  <- ggraph::create_layout(interaction_graph_filtered, layout = 'fr')
   
   selection <- "fdr"
 
-
   cat_sub <- identify_category_subclusters(communities, df_singleton, string_db, interaction_graph_filtered,  singleton_threshold)
   df_ora <- get_community_representatives( cat_sub, universe, selection, databases_tested, threshold_mean, threshold_min, ora_min, ora_max )
   labels <- prepare_labels(cat_sub, df_ora, communities)
   
-  write.csv(df_ora, file = paste0(directory, "/overrepresentation_analysis_", reference, ".csv"))
+  write.csv(df_ora, file = paste0(folder_results, "/overrepresentation_analysis_", reference, ".csv"))
   
-  save_network_structure(cat_sub, directory, reference)
+  save_network_structure(cat_sub, folder_results, reference)
   
   gene_name <- c()
   for(str_i in layout_fr$name){
@@ -84,33 +75,6 @@ automated_functional_analysis <- function( my_geneset,
     layout_fr$highlight <- igraph::V(interaction_graph_filtered)$highlight
   }
   
-  
-  
-  g02 <- ggraph(layout_fr)  + 
-    geom_edge_link(color = "grey40", width = 0.5, alpha = 0.7) +       # Draw the edges
-    geom_node_point(
-      aes(fill = as.factor(community)), 
-      size = 5, 
-      shape = 21, 
-      stroke = 0.7, 
-      color = "black"
-    )+
-    geom_node_text(
-      aes(label = gene_name),
-      repel = TRUE,        # avoids text overlapping
-      size = 5
-    ) + 
-    theme_bw() + 
-    theme(
-      legend.text = ggtext::element_markdown(),  # <- this enables HTML/Markdown rendering
-      axis.text.x = ggtext::element_markdown(), 
-      panel.background = element_blank(),
-      panel.grid = element_blank(),
-      axis.ticks = element_blank(),
-      axis.text = element_blank(),
-      axis.title = element_blank(), 
-      legend.position = "none"
-    ) 
   
   if(length(protein_highlight)>0){
     g_figure <- ggraph::ggraph(layout_fr) +
@@ -170,8 +134,8 @@ automated_functional_analysis <- function( my_geneset,
       #legend.position = "none"
     #) 
   
-  ggsave( plot = g_figure, filename = paste0(directory, "/ppi_network_", reference, ".png"), width = network_width, height = network_height )
-  ggsave( plot = g_figure2, filename = paste0(directory, "/ppi_network_with_labels_", reference, ".png"), width = network_width, height = network_height )
+  ggsave( plot = g_figure, filename = paste0(folder_results, "/ppi_network_", reference, ".png"), width = network_width, height = network_height )
+  ggsave( plot = g_figure2, filename = paste0(folder_results, "/ppi_network_with_labels_", reference, ".png"), width = network_width, height = network_height )
   
   return(list(figure = g_figure, results = df_ora, network_structure = cat_sub, network_layout = layout_fr, labels = labels, mapped_proteins))
   
@@ -181,7 +145,7 @@ automated_functional_analysis <- function( my_geneset,
   
   
   
-replot_network <- function(layout_fr, directory, network_height, network_width, label_size, legend_size, labels){
+replot_network <- function(layout_fr, folder_results, network_height, network_width, label_size, legend_size, labels){
   
 highlight <- layout_fr$highlight
 community <- layout_fr$community
@@ -236,8 +200,8 @@ g_figure2 <- g_figure +
   )
 
 
-ggsave( plot = g_figure, filename = paste0(directory, "/ppi_network_replot_", reference, ".png"), width = network_width, height = network_height )
-ggsave( plot = g_figure2, filename = paste0(directory, "/ppi_network_with_labels_replot_", reference, ".png"), width = network_width, height = network_height )
+ggsave( plot = g_figure, filename = paste0(folder_results, "/ppi_network_replot_", reference, ".png"), width = network_width, height = network_height )
+ggsave( plot = g_figure2, filename = paste0(folder_results, "/ppi_network_with_labels_replot_", reference, ".png"), width = network_width, height = network_height )
 
 
 }
