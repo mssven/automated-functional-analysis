@@ -5,7 +5,7 @@ library(dplyr)
 
 
 
-run_full_analysis <- function( my_geneset, 
+automated_functional_analysis <- function( my_geneset, 
                                universe, 
                                threshold_mean, 
                                threshold_min, 
@@ -28,8 +28,7 @@ run_full_analysis <- function( my_geneset,
  
   
   string_database_location <- "D:/Function_for_functional_analysis/String"
-  #species <- 10090
-  #species <- 9606
+  
 
   out_ii <- identify_interactions( my_geneset, string_database_location, species)  
   
