@@ -32,6 +32,16 @@ automated_functional_analysis <- function( my_geneset,
   string_db <- out_ii$string_db
   
   mapped_proteins <- string_db$map(data.frame(protein = my_geneset), "protein", removeUnmappedRows = TRUE)
+  
+  map_temp <- merge(
+    mapped_proteins,
+    string_db$proteins,
+    by.x = "STRING_id",
+    by.y = "protein_external_id"
+  )
+  
+  mapped_proteins$protein <- map_temp$preferred_name
+  
 
   out_cn <- construct_network( interactions, min_cluster, string_db, protein_highlight, string_score_threshold, mapped_proteins )
 
@@ -44,7 +54,6 @@ automated_functional_analysis <- function( my_geneset,
 
   genes_in_network <- c()
   network_membership <- c()
-  
   
   out_asm <- assign_subnetwork_membership(my_geneset, interactions, communities, string_db, mapped_proteins)
   df_out <- out_asm$df_out
