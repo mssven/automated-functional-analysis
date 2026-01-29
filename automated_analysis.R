@@ -25,13 +25,13 @@ automated_functional_analysis <- function( my_geneset,
   string_database_location <- paste0(folder_databases, "/String")
   
 
-  out_ii <- identify_interactions( my_geneset, string_database_location, species)  
+  out_ii <- identify_interactions( my_geneset, string_database_location, species )  
   
-
+  mapped_proteins <- out_ii$mapped_proteins
   interactions <- out_ii$interactions
   string_db <- out_ii$string_db
   
-  mapped_proteins <- string_db$map(data.frame(protein = my_geneset), "protein", removeUnmappedRows = TRUE)
+  #mapped_proteins <- string_db$map(data.frame(protein = my_geneset), "protein", removeUnmappedRows = TRUE)
   
   map_temp <- merge(
     mapped_proteins,
@@ -41,6 +41,7 @@ automated_functional_analysis <- function( my_geneset,
   )
   
   mapped_proteins$protein <- map_temp$preferred_name
+  mapped_proteins$STRING_id <- map_temp$STRING_id
   
 
   out_cn <- construct_network( interactions, min_cluster, string_db, protein_highlight, string_score_threshold, mapped_proteins )
@@ -74,6 +75,7 @@ automated_functional_analysis <- function( my_geneset,
   
   gene_name <- c()
   for(str_i in layout_fr$name){
+    print(paste(str_i, mapped_proteins$protein[mapped_proteins$STRING_id == str_i]))
     gene_name <- c(gene_name, mapped_proteins$protein[mapped_proteins$STRING_id == str_i])
   }
   

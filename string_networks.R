@@ -2,7 +2,7 @@
 
 
 
-identify_interactions <- function( my_geneset, string_database_location, species, threshold, mapped_proteins ){
+identify_interactions <- function( my_geneset, string_database_location, species, threshold ){
   
   string_db <- STRINGdb::STRINGdb$new(version="12", species=species, score_threshold=0, input_directory=string_database_location, link_data='detailed')
   mapped_proteins <- string_db$map(data.frame(protein = my_geneset), "protein", removeUnmappedRows = TRUE)
@@ -16,7 +16,7 @@ identify_interactions <- function( my_geneset, string_database_location, species
   
   
   
-  return(list(interactions=interactions, string_db = string_db))
+  return(list(interactions=interactions, string_db = string_db, mapped_proteins = mapped_proteins))
 }
 
 
